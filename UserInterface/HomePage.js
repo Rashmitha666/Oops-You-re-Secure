@@ -1,0 +1,1 @@
+//Web component with 2 buttons send and receive
