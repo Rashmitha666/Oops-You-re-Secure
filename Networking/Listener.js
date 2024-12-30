@@ -1,3 +1,5 @@
+import { messageDataType } from '../Common/Constants.js';
+
 const net = require('net');
 
 class Listener
@@ -10,8 +12,12 @@ class Listener
         Listener.server = net.createServer((socket)=>
         {
             Listener.socket = socket;
-        });
 
+            Listener.socket.on("data", (data)=>
+            {
+                Listener.handleIncomingData(data);
+            });
+        });
         
     }
 
@@ -21,6 +27,33 @@ class Listener
         {
             Listener.socket.end();
             Listener.socket = null;
+        }
+    }
+
+    static handleIncomingData(data)
+    {
+
+        try
+        {
+            const dataObject = JSON.parse(data);
+            
+            switch(dataObject["type"])
+            {
+                case messageDataType.TEXT:
+                {
+
+                    break;
+                }
+                case messageDataType.FILE: 
+                {
+                    break;
+                }
+
+            }
+        }
+        catch(exception)
+        {
+
         }
     }
 }
