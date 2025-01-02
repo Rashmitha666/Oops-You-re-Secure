@@ -14,8 +14,6 @@ class Client
             console.log("Connected to the server!");
             
         });
-
-        
     }
 
     static disconnect()
@@ -26,29 +24,6 @@ class Client
         }
     }
 
-    //fileBuffer.toString('base64')
-    //Sending message format { "type": <messageDataType>, "data": <base 64 String> }
-    static send(data, type, fileName="")
-    {
-        //Data will be the text message when message type is text and a base64 string when it is a file
-
-        switch(type)
-        {
-            case messageDataType.TEXT:
-                Client.client.write(JSON.stringify({ type: type, data: data}));
-                break;
-
-            case messageDataType.FILE:
-            {
-                //Returns EncryptedData object
-                //const encyptedData = Encryption.encrypt(new TextEncoder().encode(new String("Hello World")), encryptionAlgorithm.AES);
-                Client.client.write(JSON.stringify({ type: type, data: data, fileName: fileName}));
-            }
-                
-
-            break;
-        }
-    }
 }
 
 export default Client;

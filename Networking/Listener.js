@@ -1,4 +1,5 @@
 import { messageDataType } from '../Common/Constants.js';
+import { receive } from './Receive.js';
 
 const net = require('net');
 
@@ -15,7 +16,7 @@ class Listener
 
             Listener.socket.on("data", (data)=>
             {
-                Listener.handleIncomingData(data);
+                receive(data);
             });
         });
         
@@ -30,32 +31,6 @@ class Listener
         }
     }
 
-    static handleIncomingData(data)
-    {
-
-        try
-        {
-            const dataObject = JSON.parse(data);
-            
-            switch(dataObject["type"])
-            {
-                case messageDataType.TEXT:
-                {
-
-                    break;
-                }
-                case messageDataType.FILE: 
-                {
-                    break;
-                }
-
-            }
-        }
-        catch(exception)
-        {
-
-        }
-    }
 }
 
 export default Listener;
