@@ -1,3 +1,7 @@
+import Listener from "../Networking/Listener.js";
+import WaitingPage from "./WaitingPage.js";
+import ConnectionPage from "./ConnectionPage.js";
+
 //Web component with 2 buttons send and listen
 class HomePage extends HTMLElement
 {
@@ -17,14 +21,7 @@ class HomePage extends HTMLElement
         this.innerHTML=
         `
              <style>
-                button 
-                {
-                    font-size: 16px;
-                    padding: 10px 20px;
-                    margin: 10px;
-                    cursor: pointer;
-                    width: 40%;
-                }
+                
                 .connect-button 
                 {
                     background-color:rgb(91, 76, 175);
@@ -39,9 +36,14 @@ class HomePage extends HTMLElement
                     border: none;
                     border-radius: 5px;
                 }
-                .connect-button:hover, .listen-button:hover 
+
+                button 
                 {
-                    opacity: 0.8;
+                    font-size: 16px;
+                    padding: 10px 20px;
+                    margin: 10px;
+                    cursor: pointer;
+                    width: 40%;
                 }
             </style>
             <h1 align="center">Home Page</h1>
@@ -49,7 +51,22 @@ class HomePage extends HTMLElement
             <button class="listen-button">Listen</button>
 
 
-        `
+        `;
+
+        const connectButton = this.querySelector(".connect-button");
+        const listenButton = this.querySelector(".listen-button");
+
+        connectButton.addEventListener("click", ()=>
+        {
+            window.openPage("connection-page");
+        });
+
+        listenButton.addEventListener("click", ()=>
+        {
+            Listener.start();
+            window.openPage("waiting-page");
+        });
+
     }
 }
 

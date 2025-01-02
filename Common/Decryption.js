@@ -1,10 +1,9 @@
-import { encryptionAlgorithm } from '../Constants/EncryptionAlgorithm.js';
-import EncryptionDecryption from '../EncryptionDecryption/EncryptionDecryption.js';
+import { encryptionAlgorithm } from '../Constants.js';
 import Encryption from './Encryption.js';
 
 const crypto = require('crypto');
 
-class Decryption extends EncryptionDecryption
+class Decryption
 {   
     static aes(encryptedData)
     {

@@ -1,4 +1,4 @@
-export const newtorkConfiguration  = 
+export const networkConfiguration  = 
 { 
     listenerPort : 5000, 
     clientPort: 5000 

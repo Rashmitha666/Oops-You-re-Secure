@@ -1,9 +1,14 @@
+import { messageDataType } from "../Common/Constants.js";
+import { send } from "../Networking/Send.js";
+import ChatMessage from "./ChatMessage.js";
+
 class ChatPage extends HTMLElement
 {
     constructor()
     {
         super();
     }
+
     connectedCallback()
     {
         this.style.display = "flex";
@@ -14,9 +19,7 @@ class ChatPage extends HTMLElement
 
         this.innerHTML=
         `
-             
             <style>
-                
                 .chat-container
                 {
                     display: flex;
@@ -30,25 +33,10 @@ class ChatPage extends HTMLElement
                     flex-grow: 1;
                     overflow-y: auto; 
                     padding: 10px;
-                    background-color: #f5f5f5;
+                    background-color: #1f1f1f;
                     border-bottom: 1px solid #ccc;
                     margin-bottom: 10px;
                 }
-
-                .message 
-                {
-                    background-color: #e0e0e0;
-                    padding: 10px;
-                    margin: 5px 0;
-                    border-radius: 10px;
-                }
-
-                .message.me 
-                {
-                    background-color: #dcf8c6; 
-                    align-self: flex-end;
-                }
-
                 .input-area 
                 {
                     display: flex;
@@ -67,14 +55,13 @@ class ChatPage extends HTMLElement
                     margin-right: 10px;
                 }
 
-                .send-button,
-                .attach-button 
+                .send-button,.attach-button 
                 {
                     background-color: #25d366; 
                     border: none;
                     color: white;
                     padding: 10px;
-                    border-radius: 50%;
+                    border-radius: 10px;
                     cursor: pointer;
                 }
 
@@ -93,12 +80,9 @@ class ChatPage extends HTMLElement
             </style>
             <div class="chat-container">
                 <div class="messages">
-                    <div class="message">Hello!</div>
-                    <div class="message me">Hi, how are you?</div>
-                    <div class="message">I'm good, thanks!</div>
                 </div>
                 <div class="input-area">
-                    <button class="attach-button">+</button>
+                    <button class="attach-button">Attach File</button>
                     <input type="text" class="message-input" placeholder="Type a message...">
                     <button class="send-button">Send</button>
                 </div>
@@ -110,22 +94,78 @@ class ChatPage extends HTMLElement
         const messageInput = this.querySelector(".message-input");
         const messagesContainer = this.querySelector(".messages");
 
-        sendButton.addEventListener("click", () => {
+        sendButton.addEventListener("click", () => 
+        {
             const messageText = messageInput.value.trim();
-            if (messageText) {
-                const messageDiv = document.createElement("div");
-                messageDiv.classList.add("message", "me");
-                messageDiv.textContent = messageText;
-                messagesContainer.appendChild(messageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            if(messageText) 
+            {
+                send(messageText, messageDataType.TEXT);
                 messageInput.value = "";
             }
         });
 
-        attachButton.addEventListener("click", () => {
-            alert("Attach button clicked!");
+        messageInput.addEventListener("keydown", (event)=>
+        {
+            if(event.key == "Enter")
+            {
+                sendButton.click();
+            }
+        });
+
+        attachButton.addEventListener("click", () => 
+        {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            
+            fileInput.style.display = "none";
+            document.body.appendChild(fileInput);
+
+            fileInput.addEventListener("change", (event)=>
+            {
+                const file = fileInput.files[0];
+                console.log("File: " + file);
+
+                if(file) 
+                {
+                    const reader = new FileReader();
+                    reader.onload = () => 
+                    {
+                        const arrayBuffer = reader.result;
+                        const byteArray = new Uint8Array(arrayBuffer);
+                        const base64String = btoa(String.fromCharCode(...byteArray));
+                        const fileName = file.name;
+
+                        send(base64String, messageDataType.FILE, fileName);
+                    }
+                    reader.readAsArrayBuffer(file);
+                }
+            });
+
+            fileInput.click();
+        });
+
+        window.addEventListener("on-chat-received", (event)=>
+        {
+            const newChatMessage = document.createElement("chat-message");
+            const chatJson = event.detail;
+
+            newChatMessage.initialize(false, chatJson);
+            messagesContainer.appendChild(newChatMessage);
+        });
+
+        window.addEventListener("on-chat-sent", (event)=>
+        {
+            console.log("Message sent!");
+
+            const newChatMessage = document.createElement("chat-message");
+            const chatJson = event.detail;
+            
+            newChatMessage.initialize(true, chatJson);
+            messagesContainer.appendChild(newChatMessage);
         });
     }
 }
 
 customElements.define('chat-page', ChatPage);
+export default ChatPage;

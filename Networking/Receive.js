@@ -5,20 +5,10 @@ export function receive(data)
     try
     {
         const dataObject = JSON.parse(data);
-        
-        switch(dataObject["type"])
-        {
-            case messageDataType.TEXT:
-            {
-                
-                break;
-            }
-            case messageDataType.FILE: 
-            {
-                break;
-            }
 
-        }
+        const chatReceivedEvent = new CustomEvent("on-chat-received", { detail: dataObject });
+        window.dispatchEvent(chatReceivedEvent);
+        
     }
     catch(exception)
     {
