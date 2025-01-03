@@ -7,7 +7,9 @@ export const networkConfiguration  =
 export const messageDataType = 
 {
     TEXT: 0,
-    FILE: 1
+    FILE: 1,
+    EXCHANGE_SENDER_PUBLIC_RSA_KEY: 2,
+    ENCRYPT_RECEIVER_AES_KEY_WITH_SENDER_RSA_PUBLIC_KEY: 3
 };
 
 export const encryptionAlgorithm = 
@@ -15,3 +17,4 @@ export const encryptionAlgorithm =
     AES: 0,
     RSA: 1
 }
+

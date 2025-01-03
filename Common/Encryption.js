@@ -1,6 +1,7 @@
 import { encryptionAlgorithm } from './Constants.js';
 import Decryption from './Decryption.js';
 import EncryptedData from './EncryptedData.js';
+import { getAesInitialVector, getAesKey } from './Utility.js';
 
 
 const crypto = require('crypto');
@@ -28,7 +29,7 @@ class Encryption
         const encrypted = Buffer.concat([cipher.update(data), cipher.final()]); 
         const encryptedByteArray = new Uint8Array(encrypted);
 
-        const encryptedDataObject = new EncryptedData(encryptedByteArray,key, null, initialVector);
+        const encryptedDataObject = new EncryptedData(encryptedByteArray, key, null, initialVector);
         return encryptedDataObject; 
     }
 
@@ -48,8 +49,8 @@ class Encryption
         {
             case encryptionAlgorithm.AES:
             {
-                const key = Encryption.generateKeyAes();
-                const initialVector = Encryption.generateInitialVectorAes();
+                const key = getAesKey();
+                const initialVector = getAesInitialVector();
                 return Encryption.aes(data, key, initialVector);
             }
                 
@@ -66,22 +67,6 @@ class Encryption
 export default Encryption;
 
 
-console.log(Encryption.encrypt(new TextEncoder().encode(new String("Hello World")), encryptionAlgorithm.AES));
-
-const encyptedData = Encryption.encrypt(new TextEncoder().encode(new String("Hello World")), encryptionAlgorithm.AES);
-
-// // AES Decryption function
-// const AES_Decryption = (data) => 
-// {
-//     const decipher = crypto.createDecipheriv('aes-256-cbc', encyptedData.privateKey, encyptedData.initialVector);
-//     const decrypted = Buffer.concat([decipher.update(encyptedData.data), decipher.final()]);
-//     return decrypted;
-// };
-
-const decryptedData = Decryption.decrypt(encyptedData,encryptionAlgorithm.AES);
-const finalText = decryptedData.toString('utf-8');  
-// console.log(decryptedData);
-console.log(finalText); 
 
 
 

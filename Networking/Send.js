@@ -1,4 +1,5 @@
-import { messageDataType } from "../Common/Constants.js";
+import { encryptionAlgorithm, messageDataType } from "../Common/Constants.js";
+import Encryption from "../Common/Encryption.js";
 import Client from "./Client.js";
 import Listener from "./Listener.js";
 //fileBuffer.toString('base64')
@@ -19,24 +20,54 @@ export function send(data, type, fileName="")
     switch(type)
     {
         case messageDataType.TEXT:
-
+        {
             unencyptedData = { type: type, data: data };
-            //Encryption
-            socket.write(JSON.stringify(unencyptedData));
+            const unencyptedDataString = JSON.stringify(unencyptedData);
+            const dataBuffer = new TextEncoder().encode(unencyptedDataString);
+
+            const encryptedDataObject = Encryption.encrypt(dataBuffer, encryptionAlgorithm.AES);
+
+            console.log("Unencrypted buffer is :" + dataBuffer);
+            console.log("Encrypted buffer is: " + encryptedDataObject.data);
+
+            socket.write(encryptedDataObject.data);
+
             break;
+        }
+
 
         case messageDataType.FILE:
         {
+
             unencyptedData = { type: type, data: data, fileName: fileName };
-            //Returns EncryptedData object
-            //const encyptedData = Encryption.encrypt(new TextEncoder().encode(new String("Hello World")), encryptionAlgorithm.AES);
-            //Encryption
-            socket.write(JSON.stringify(unencyptedData));
+
+            const unencyptedDataString = JSON.stringify(unencyptedData);
+            const dataBuffer = new TextEncoder().encode(unencyptedDataString);
+            
+            const encryptedDataObject = Encryption.encrypt(dataBuffer, encryptionAlgorithm.AES);
+
+            console.log("Unencrypted buffer is :" + dataBuffer);
+            console.log("Encrypted buffer is: " + encryptedDataObject.data);
+
+            socket.write(encryptedDataObject.data);
+
+            break;
         }
-        
-
-
-        break;
+        case messageDataType.EXCHANGE_SENDER_PUBLIC_RSA_KEY:
+        {
+            console.log("Sending public Rsa key!");
+            unencyptedData = { type: type, data: data };
+            socket.write(JSON.stringify(unencyptedData));
+            return;
+        }
+        case messageDataType.ENCRYPT_RECEIVER_AES_KEY_WITH_SENDER_RSA_PUBLIC_KEY:
+        {
+            console.log("Sending encrypted Aes key");
+            unencyptedData = { type: type, data: data };
+            socket.write(JSON.stringify(unencyptedData));
+            return;
+        }
+          
     }
 
     const chatSentEvent = new CustomEvent("on-chat-sent", {detail: unencyptedData});

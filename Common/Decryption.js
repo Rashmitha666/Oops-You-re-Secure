@@ -1,4 +1,4 @@
-import { encryptionAlgorithm } from '../Constants.js';
+import { encryptionAlgorithm } from './Constants.js';
 import Encryption from './Encryption.js';
 
 const crypto = require('crypto');

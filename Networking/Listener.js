@@ -7,7 +7,10 @@ class Listener
 {   
     static server = null;
     static socket = null;
-
+    static clientPublicRsaKey = null;
+    static aesKey = null;
+    static aesInitialVector = null;
+    
     static start()
     {
         Listener.server = net.createServer((socket)=>
