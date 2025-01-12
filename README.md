@@ -76,7 +76,7 @@
    ```
    npm start
 
-##Contributing
+## Contributing
 Feel free to fork this repository and submit pull requests for any improvements or features you would like to add.
 
-#
+
