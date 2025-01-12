@@ -10,12 +10,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "crypto": "^1.0.1",
     "net": "^1.0.2"
   },
   "devDependencies": {
     "electron": "^33.2.1"
-  }
+  },
+  "description": ""
 }
