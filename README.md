@@ -55,3 +55,23 @@
 
    ```bash
    git clone https://github.com/Rashmitha666/Oops-You-re-Secure.git
+
+2. **Navigate into directory**
+
+   ```bash
+   cd
+
+3. **Install electronjs**
+
+   ```bash
+   npm install electron
+
+4. **Install npm packages**
+
+   ```
+   npm install
+
+5. **Start the Application**
+
+   ```
+   npm start
